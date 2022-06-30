@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLUs7B16AUDD2LCrzs6tm_uDhkjUoRWBE",
+      authDomain: "external-dca2d.firebaseapp.com",
+      projectId: "external-dca2d",
+      storageBucket: "external-dca2d.appspot.com",
+      messagingSenderId: "799583276869",
+      appId: "1:799583276869:web:f6f5e3f33b55c03314782c"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+ 
+    
+
+    import{
+        getDatabase,
+        ref,
+        get,
+        set,
+        child,
+        update,
+        remove
+    }from"https://www.gstatic.com/firebasejs/9.8.4/firebase-database.js";
+    const db =getDatabase();
+    var unameBox=document.getElementById("uname");
+    var rollBox=document.getElementById("roll");
+    var pwdBox=document.getElementById("pwd");
+    var sbutton=document.getElementById("submit");
+    var selbutton=document.getElementById("select");
+    var celbutton=document.getElementById("clear");
+    var upbutton=document.getElementById("update");
+    var delbutton=document.getElementById("delete");
+   
+    function submitdata()
+    {
+        set(ref(db,"student/"+rollBox.value),
+        {
+            Stdname:unameBox.value,
+            Roll:rollBox.value,
+            Password:pwdBox.value
+        }).then(()=>alert("Student details are inserted successfully"))
+        .catch((err)=>alert("data not inserted"+err))
+       cleardata();
+    }
+    function selectdata(){
+      const dbref=ref(db);
+      get(child(dbref,"student/"+rollBox.value))
+      .then((snapshot)=>{
+          if(snapshot.exists()){
+              unameBox.value=snapshot.val().Stdname,
+              rollBox.value=snapshot.val().Roll,
+              pwdBox.value=snapshot.val().Password
+          }
+          else{
+              alert("No data");
+          }
+      })
+      .catch((err)=>
+      {
+          alert("Unsuccessful error"+err)
+      });
+      cleardata();
+    }
+    function cleardata(){
+        unameBox.value="",
+        rollBox.value="",
+        pwdBox.value=""
+    }
+    function updatedata()
+    {
+        update(ref(db,"student/"+rollBox.value),
+        {
+            Stdname:unameBox.value,
+            Roll:rollBox.value,
+            Password:pwdBox.value
+        }).then(()=>alert("Student details are updated successfully"))
+        .catch((err)=>alert("data not updated"+err))
+        cleardata();
+
+    }
+    function deletedata()
+    {
+        remove(ref(db,"student/"+rollBox.value),
+        {
+            
+        }).then(()=>alert("Student details are deleted successfully"))
+        .catch((err)=>alert("data not deleted"+err))
+        cleardata();
+
+    }
+
+    sbutton.addEventListener("click",submitdata);
+    selbutton.addEventListener("click",selectdata);
+    celbutton.addEventListener("click",cleardata);
+    upbutton.addEventListener("click",updatedata);
+    delbutton.addEventListener("click",deletedata);
+
+  </script>
+<body>
+    <h1>CVR COLLEGE OF ENGINEERING</h1>
+    <h2>REGISTRATION PAGE</h2>
+    USERNAME<input type="text" id ="uname"></input><br><br>
+    ROLL:<input type="text" id ="roll"></input><br><br>
+    PASSWORD:<input type="password" id ="pwd"></input><br><br>
+    <button id="submit">INSERT</button>
+    <button id="select">SELECT</button>
+    <button id="update">UPDATE</button>
+    <button id="clear">CLEAR</button>
+    <button id="delete">DELETE</button>
+
+    
+</body>
+</html>
